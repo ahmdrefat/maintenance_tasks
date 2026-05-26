@@ -1,0 +1,52 @@
+app/views/maintenance_tasks/tasks/index.html.erb
+  s_d1570b39d26e06::t_07db38b303b994 1-22,24-34,37-73
+test/jobs/maintenance_tasks/task_job_test.rb
+  s_d1570b39d26e06::t_07db38b303b994 185
+app/views/maintenance_tasks/tasks/show.html.erb
+  s_d1570b39d26e06::t_07db38b303b994 7-24,27-31,49,56-57,59,61-62,65-72
+test/helpers/maintenance_tasks/tasks_helper_test.rb
+  s_d1570b39d26e06::t_07db38b303b994 31-33,48-50,55-56
+app/views/maintenance_tasks/runs/_arguments.html.erb
+  s_d1570b39d26e06::t_07db38b303b994 2
+app/controllers/maintenance_tasks/tasks_controller.rb
+  s_d1570b39d26e06::t_07db38b303b994 13-14,16-17
+app/views/maintenance_tasks/runs/_metadata.html.erb
+  s_d1570b39d26e06::t_07db38b303b994 2
+app/views/maintenance_tasks/tasks/_task.html.erb
+  s_d1570b39d26e06::t_07db38b303b994 1-14,16-35
+app/views/maintenance_tasks/runs/_run.html.erb
+  s_d1570b39d26e06::t_07db38b303b994 1-7,9,11,13-15,17-19,21-25,27-45,47-49
+app/views/layouts/maintenance_tasks/_navbar.html.erb
+  s_d1570b39d26e06::t_07db38b303b994 3-22
+app/views/maintenance_tasks/runs/_csv.html.erb
+  s_d1570b39d26e06::t_07db38b303b994 3-5
+test/helpers/maintenance_tasks/application_helper_test.rb
+  s_d1570b39d26e06::t_07db38b303b994 7,12
+app/helpers/maintenance_tasks/application_helper.rb
+  s_d1570b39d26e06::t_07db38b303b994 9-11,16
+app/controllers/maintenance_tasks/application_controller.rb
+  s_d1570b39d26e06::t_2f52fab9d8da86 14
+  s_d1570b39d26e06::t_0d7d9e02a7b25d 22
+app/helpers/maintenance_tasks/tasks_helper.rb
+  s_d1570b39d26e06::t_07db38b303b994 23-37,61,67,69,80-85
+app/views/layouts/maintenance_tasks/application.html.erb
+  s_d1570b39d26e06::t_3c1b9b8aba46fc 143-144,146-147,150-151
+  s_d1570b39d26e06::t_07db38b303b994 18-26,40,50-62,76-77,79,81,83-103,105-108,118,121-142,145,148-149,152-402,406-547,552-558,564-569,571-575,589-590,596-632,637,640,650-651
+  s_d1570b39d26e06::t_1cb20696c4124d 548-551,559-563,576-587,591-593,595
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "369b5421995b507eb33161c1ab4b04f62a65b7c4",
+  "prompts": {},
+  "sessions": {
+    "s_d1570b39d26e06": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c0e5fac5-da4e-4df4-a53a-c075e7e809b9",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Ahmed R. Hussein <elrefat@gmail.com>"
+    }
+  }
+}
