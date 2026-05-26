@@ -1,0 +1,54 @@
+app/models/maintenance_tasks/task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 42-46,174-186
+test/dummy/app/tasks/maintenance/update_posts_in_batches_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 5-6
+test/dummy/app/tasks/maintenance/update_posts_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 5-6
+test/dummy/app/tasks/maintenance/import_posts_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 5
+test/dummy/app/tasks/maintenance/cancelled_enqueue_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 6-7
+test/dummy/app/tasks/maintenance/error_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 5-6
+app/models/maintenance_tasks/task_data_index.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 101-110
+test/dummy/app/tasks/maintenance/update_posts_module_prepended_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 7
+test/dummy/app/tasks/maintenance/batch_import_posts_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 5
+test/models/maintenance_tasks/task_test.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 136-185
+test/dummy/app/tasks/maintenance/enqueue_error_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 6-7
+test/dummy/app/tasks/maintenance/import_posts_with_options_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 5
+test/dummy/app/tasks/maintenance/params_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 13-14
+test/dummy/app/tasks/maintenance/update_posts_throttled_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 5-6
+test/dummy/app/tasks/maintenance/stale_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 5-6
+test/dummy/app/tasks/maintenance/import_posts_with_encoding_task.rb
+  s_d1570b39d26e06::t_d87829a3d96f01 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "b1dad78e3edd07695a532eee26527f748e9dfb3d",
+  "prompts": {},
+  "humans": {
+    "h_47cd3cafe53b4d": {
+      "author": "Ahmed R. Hussein <elrefat@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_d1570b39d26e06": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c0e5fac5-da4e-4df4-a53a-c075e7e809b9",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Ahmed R. Hussein <elrefat@gmail.com>"
+    }
+  }
+}
