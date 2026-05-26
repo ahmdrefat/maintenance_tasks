@@ -1,0 +1,21 @@
+app/views/layouts/maintenance_tasks/application.html.erb
+  s_d1570b39d26e06::t_879b034cd09387 544-610,634,637-644
+app/controllers/maintenance_tasks/application_controller.rb
+  s_d1570b39d26e06::t_c559ee82bdbcb1 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "498bb86f7b06a14bb19c61b958a52e72b5c0aa6c",
+  "prompts": {},
+  "sessions": {
+    "s_d1570b39d26e06": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c0e5fac5-da4e-4df4-a53a-c075e7e809b9",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Ahmed R. Hussein <elrefat@gmail.com>"
+    }
+  }
+}
