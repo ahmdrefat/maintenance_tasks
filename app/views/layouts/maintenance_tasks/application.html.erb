@@ -57,9 +57,164 @@
         --ruby-string: #a5d6ff;
       }
 
-      .brand-link,
+      /* ─── Navbar / header ───────────────────────────────────────────────
+       * Sticky header with a frosted backdrop, hairline bottom separator, and
+       * a content row constrained to the same 70% column as the page below.
+       * Brand color is muted in default state; the brand red shows only on
+       * hover/focus to keep the identity but quiet the resting state. */
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: color-mix(in srgb, var(--mt-surface) 80%, transparent);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--mt-hairline);
+        min-height: auto;
+        padding: 0;
+      }
+      .navbar-inner {
+        width: 100%;
+        max-width: min(70%, 1080px);
+        margin: 0 auto;
+        padding: 0.45rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      @media (max-width: 48rem) {
+        .navbar-inner { max-width: 100%; padding-left: 1rem; padding-right: 1rem; }
+      }
+      .navbar .navbar-brand {
+        align-items: center;
+        gap: 0.5rem;
+        min-height: auto;
+        min-width: 0;
+        flex: 1 1 auto;
+        overflow: hidden;
+      }
+      .navbar .navbar-end {
+        align-items: center;
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      .navbar .navbar-item {
+        padding: 0;
+        min-height: auto;
+        background: transparent !important;
+      }
+
+      .brand-link {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 0.45rem;
+        color: var(--mt-text) !important;
+        font-size: 0.92rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 100ms ease-out;
+      }
       .brand-link:hover,
-      .brand-link:focus { color: var(--bulma-danger-on-scheme); }
+      .brand-link:focus { color: var(--bulma-danger-on-scheme) !important; }
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--bulma-danger-on-scheme);
+      }
+      .brand-mark svg {
+        width: 16px;
+        height: 16px;
+        transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .brand-link:hover .brand-mark svg { transform: rotate(-12deg); }
+      .brand-text { white-space: nowrap; }
+      @media (prefers-reduced-motion: reduce) {
+        .brand-mark svg { transition: none; }
+      }
+
+      .navbar-breadcrumb-sep {
+        color: var(--mt-border);
+        font-weight: 400;
+        flex: 0 0 auto;
+      }
+      .navbar-breadcrumb {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.85rem;
+        color: var(--mt-text-muted);
+      }
+      .navbar-breadcrumb-current {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        color: var(--mt-text);
+        font-size: 0.82rem;
+      }
+      .navbar-breadcrumb a {
+        color: var(--mt-text-muted);
+        text-decoration: none;
+      }
+      .navbar-breadcrumb a:hover { color: var(--mt-text); }
+
+      /* Search input lives in the navbar's middle slot on the tasks index.
+       * Self-contained markup (no Bulma .control / .has-icons-left wrappers)
+       * so the input sizing is predictable. Magnifier glyph is a background
+       * SVG, not a layered span, so there's no height conflict between the
+       * icon container and the input. */
+      .navbar-middle {
+        flex: 1 1 auto;
+        display: flex;
+        justify-content: center;
+        min-width: 0;
+      }
+      .task-search-wrap {
+        position: relative;
+        width: 100%;
+        max-width: 24rem;
+        display: flex;
+        align-items: center;
+      }
+      /* Inner wrapper so the magnifier glyph is positioned relative to the
+       * input itself, not the outer wrap (which also holds the filter-count
+       * badge to the left of the search). */
+      .task-search-field {
+        position: relative;
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+      }
+      .task-search-field::before {
+        content: "⌕";
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        line-height: 1;
+        color: var(--mt-text-muted);
+        pointer-events: none;
+      }
+      .task-search {
+        flex: 1 1 auto;
+        height: 32px;
+        font: inherit;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        padding: 0 0.7rem 0 1.95rem;
+        margin: 0;
+        color: var(--mt-text);
+        background: var(--mt-surface-subtle);
+        border: 1px solid var(--mt-hairline);
+        border-radius: var(--mt-radius-md);
+        appearance: none;
+        outline: none;
+        transition: background-color 100ms ease-out, border-color 100ms ease-out;
+      }
+      .task-search:hover { background-color: var(--mt-surface); }
+      .task-search:focus { background-color: var(--mt-surface); border-color: var(--mt-link); }
+      .task-search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
 
       .ruby-comment { color: var(--ruby-comment); }
       .ruby-const { color: var(--ruby-const); }
@@ -210,8 +365,29 @@
 
       /* Bulma's .section defaults to 3rem padding — too airy for an embedded
          admin UI. Tighten the top so the page H1 sits closer to the navbar. */
-      main.section { padding-top: 1.75rem; padding-bottom: 3rem; }
+      /* Zero horizontal padding on the section so the container's 70% width
+       * is computed from the full viewport width — matching the navbar's
+       * .navbar-inner width. Container handles its own narrow-viewport edge
+       * padding via the media query below. */
+      main.section { padding: 1.75rem 0 3rem; }
       main.section > .container > .title.is-3 { margin-bottom: 1.25rem; }
+      /* Constrain the content column to 70% of the viewport (with a sensible
+       * upper bound so on a 4k display the lines don't become unreadable
+       * blocks of text). Bulma's @media-scoped .container rules override
+       * naive selectors, so we use !important here to force the override
+       * rather than chase Bulma's breakpoint cascade. */
+      main.section > .container {
+        max-width: min(70%, 1080px) !important;
+        margin-inline: auto;
+        width: auto !important;
+      }
+      @media (max-width: 48rem) {
+        main.section > .container {
+          max-width: 100% !important;
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
 
       /* Style the native file input so the "Choose file" button matches Bulma
          buttons. The selector-button pseudo is the only cross-browser way to
@@ -286,6 +462,119 @@
         opacity: 0.7;
       }
 
+      /* ─── Polaris-flavored token layer ───────────────────────────────────
+       * Token names use `--mt-*` to stay out of Bulma's namespace. Dark
+       * variants live in the matching @media + [data-theme] blocks below. */
+      :root {
+        --mt-surface:           #ffffff;
+        --mt-surface-subtle:    #fafafa;
+        --mt-hairline:          #e3e4e6;
+        --mt-border:            #c9cccf;
+        --mt-text:              #303030;
+        --mt-text-muted:        #6d7175;
+        --mt-action:            #1a1a1a;
+        --mt-action-text:       #ffffff;
+        --mt-link:              #2c6ecb;
+
+        --mt-status-success-bg:     #e8f4e6;
+        --mt-status-success-text:   #0a6038;
+        --mt-status-success-dot:    #29845a;
+        --mt-status-error-bg:       #fcecea;
+        --mt-status-error-text:     #8e1f0b;
+        --mt-status-error-dot:      #c93a1d;
+        --mt-status-error-border:   #e3a7a0;
+        --mt-status-paused-bg:      #fff4e0;
+        --mt-status-paused-text:    #7e5700;
+        --mt-status-paused-dot:     #b8821a;
+        --mt-status-paused-border:  #e6cda5;
+        --mt-status-running-bg:     #e1eff7;
+        --mt-status-running-text:   #1e3a8f;
+        --mt-status-running-dot:    #2c6ecb;
+        --mt-status-cancel-bg:      #f1f1f3;
+        --mt-status-cancel-text:    #4a4a4f;
+        --mt-status-cancel-dot:     #8c9196;
+
+        --mt-radius-sm:    4px;
+        --mt-radius-md:    6px;
+        --mt-radius-lg:    10px;
+        --mt-radius-pill:  999px;
+        --mt-focus-ring:   0 0 0 2px rgba(44, 110, 203, 0.30);
+      }
+      /* Dark scheme overrides — applies when OS prefers dark AND user hasn't
+       * forced light, or when user has explicitly chosen dark. */
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --mt-surface:           #16191c;
+          --mt-surface-subtle:    #1c2024;
+          --mt-hairline:          #2d3137;
+          --mt-border:            #3d434b;
+          --mt-text:              #e6e8ea;
+          --mt-text-muted:        #9aa0a8;
+          --mt-action:            #f4f6f8;
+          --mt-action-text:       #1a1a1a;
+          --mt-link:              #7aa9e8;
+
+          --mt-status-success-bg:    #0f3a26;
+          --mt-status-success-text:  #7fc8a3;
+          --mt-status-success-dot:   #2f9c6b;
+          --mt-status-error-bg:      #3e1611;
+          --mt-status-error-text:    #f3a294;
+          --mt-status-error-dot:     #d75744;
+          --mt-status-error-border:  #7a3127;
+          --mt-status-paused-bg:     #3a2a08;
+          --mt-status-paused-text:   #e8c486;
+          --mt-status-paused-dot:    #c39236;
+          --mt-status-paused-border: #75571a;
+          --mt-status-running-bg:    #15243e;
+          --mt-status-running-text:  #9bbfee;
+          --mt-status-running-dot:   #4a8be0;
+          --mt-status-cancel-bg:     #23272d;
+          --mt-status-cancel-text:   #b2b6bc;
+          --mt-status-cancel-dot:    #7a7e84;
+        }
+      }
+      :root[data-theme="dark"] {
+        --mt-surface:           #16191c;
+        --mt-surface-subtle:    #1c2024;
+        --mt-hairline:          #2d3137;
+        --mt-border:            #3d434b;
+        --mt-text:              #e6e8ea;
+        --mt-text-muted:        #9aa0a8;
+        --mt-action:            #f4f6f8;
+        --mt-action-text:       #1a1a1a;
+        --mt-link:              #7aa9e8;
+
+        --mt-status-success-bg:    #0f3a26;
+        --mt-status-success-text:  #7fc8a3;
+        --mt-status-success-dot:   #2f9c6b;
+        --mt-status-error-bg:      #3e1611;
+        --mt-status-error-text:    #f3a294;
+        --mt-status-error-dot:     #d75744;
+        --mt-status-error-border:  #7a3127;
+        --mt-status-paused-bg:     #3a2a08;
+        --mt-status-paused-text:   #e8c486;
+        --mt-status-paused-dot:    #c39236;
+        --mt-status-paused-border: #75571a;
+        --mt-status-running-bg:    #15243e;
+        --mt-status-running-text:  #9bbfee;
+        --mt-status-running-dot:   #4a8be0;
+        --mt-status-cancel-bg:     #23272d;
+        --mt-status-cancel-text:   #b2b6bc;
+        --mt-status-cancel-dot:    #7a7e84;
+      }
+      /* If user has explicitly opted into light, ignore OS dark preference. */
+      :root[data-theme="light"] {
+        --mt-surface:           #ffffff;
+        --mt-surface-subtle:    #fafafa;
+        --mt-hairline:          #e3e4e6;
+        --mt-border:            #c9cccf;
+        --mt-text:              #303030;
+        --mt-text-muted:        #6d7175;
+        --mt-action:            #1a1a1a;
+        --mt-action-text:       #ffffff;
+        --mt-link:              #2c6ecb;
+      }
+
       .tag-filters {
         display: flex;
         flex-wrap: wrap;
@@ -293,21 +582,24 @@
       }
       .tag-filter {
         cursor: pointer;
-        border: 1px solid transparent;
-        background: var(--bulma-background);
-        color: var(--bulma-text);
+        background: var(--mt-surface);
+        color: var(--mt-text);
+        border: 1px solid var(--mt-border);
+        border-radius: var(--mt-radius-pill);
+        padding: 4px 10px;
         font-family: inherit;
+        font-size: 0.75rem;
+        font-weight: 500;
+        line-height: 1.4;
+        transition: background 100ms ease-out, border-color 100ms ease-out;
       }
       .tag-filter:hover {
-        border-color: var(--bulma-link);
+        background: var(--mt-surface-subtle);
       }
       .tag-filter[aria-pressed="true"] {
-        background: var(--bulma-link);
-        color: var(--bulma-link-invert, #fff);
-      }
-      .tag-filter:focus-visible {
-        outline: 2px solid var(--bulma-link);
-        outline-offset: 2px;
+        background: var(--mt-text);
+        color: var(--mt-surface);
+        border-color: var(--mt-text);
       }
 
       .task-table { table-layout: auto; }
@@ -418,21 +710,596 @@
       :root[data-theme="dark"] .theme-toggle-icon::before { content: "☀"; }
       :root[data-theme="light"] .theme-toggle-icon::before { content: "☾"; }
 
+      /* Always-visible auto-refresh indicator. Idle state shows a static
+       * muted ring; .is-refreshing spins and brightens. No show/hide toggle,
+       * so there's no flash when a poll completes quickly. */
       .navbar-refresh-indicator {
         display: inline-block;
-        width: 1rem;
-        height: 1rem;
-        border: 2px solid var(--bulma-border, #ededed);
-        border-top-color: var(--bulma-link);
+        width: 0.9rem;
+        height: 0.9rem;
+        border: 2px solid var(--mt-hairline);
+        border-top-color: var(--mt-border);
         border-radius: 50%;
+        opacity: 0.6;
+        transition: opacity 200ms ease-out, border-color 200ms ease-out;
+      }
+      .navbar-refresh-indicator.is-refreshing {
+        border-top-color: var(--mt-link);
+        opacity: 1;
         animation: navbar-refresh-spin 0.8s linear infinite;
       }
-      .navbar-refresh-indicator[hidden] { display: none; }
       @keyframes navbar-refresh-spin {
         to { transform: rotate(360deg); }
       }
       @media (prefers-reduced-motion: reduce) {
-        .navbar-refresh-indicator { animation: none; }
+        .navbar-refresh-indicator.is-refreshing { animation: none; }
+      }
+
+      /* ─── Status tags (Polaris-flavored) ────────────────────────────────
+       * Restyles the output of the status_tag helper (.tag.is-success / .is-danger /
+       * .is-warning / .is-info / .is-dark). Bulma's saturated solid colors become
+       * muted backgrounds + strong text + a 5px status dot. */
+      .tag.is-success,
+      .tag.is-danger,
+      .tag.is-warning,
+      .tag.is-info,
+      .tag.is-dark,
+      .tag.is-primary {
+        font-weight: 500;
+        border-radius: var(--mt-radius-md);
+        padding: 2px 9px;
+        height: auto;
+      }
+      /* Status pills are colored by bg + text; no leading dot. The status_tag
+       * helper's own icon span is hidden separately below. */
+      /* The status_tag helper emits a Bulma-era status icon (✓ / ⚠ / …) inside
+       * an aria-hidden span. The new dot already conveys status visually, so
+       * suppress the icon to avoid the doubled signifier. */
+      .tag.is-success > [aria-hidden="true"],
+      .tag.is-danger > [aria-hidden="true"],
+      .tag.is-warning > [aria-hidden="true"],
+      .tag.is-info > [aria-hidden="true"],
+      .tag.is-dark > [aria-hidden="true"],
+      .tag.is-primary > [aria-hidden="true"] {
+        display: none;
+      }
+      /* "New" pill — for tasks that have never been run. Uses neutral
+       * surface tones; it's not a status, just an "untouched" indicator. */
+      .tag.is-primary {
+        background-color: var(--mt-status-cancel-bg);
+        color: var(--mt-status-cancel-text);
+      }
+      .tag.is-success {
+        background-color: var(--mt-status-success-bg);
+        color: var(--mt-status-success-text);
+      }
+      .tag.is-danger {
+        background-color: var(--mt-status-error-bg);
+        color: var(--mt-status-error-text);
+      }
+      .tag.is-warning {
+        background-color: var(--mt-status-paused-bg);
+        color: var(--mt-status-paused-text);
+      }
+      .tag.is-info {
+        background-color: var(--mt-status-running-bg);
+        color: var(--mt-status-running-text);
+      }
+      .tag.is-dark {
+        background-color: var(--mt-status-cancel-bg);
+        color: var(--mt-status-cancel-text);
+      }
+
+      /* ─── Buttons (Polaris-flavored) ────────────────────────────────────
+       * Primary → neutral dark · Destructive → bordered light · Warning → same
+       * pattern in yellow · Secondary stays as a quiet outlined surface. */
+      .button {
+        font-weight: 500;
+        font-size: 0.875rem;
+        padding: 6px 12px;
+        border-radius: var(--mt-radius-md);
+        transition: background-color 100ms ease-out, border-color 100ms ease-out;
+      }
+      .button.is-primary,
+      .button.is-success {
+        background-color: var(--mt-action);
+        color: var(--mt-action-text);
+        border-color: var(--mt-action);
+      }
+      .button.is-primary:hover,
+      .button.is-success:hover {
+        background-color: var(--mt-action);
+        filter: brightness(0.92);
+      }
+      .button.is-danger {
+        background-color: var(--mt-surface);
+        color: var(--mt-status-error-text);
+        border: 1px solid var(--mt-status-error-border);
+      }
+      .button.is-danger:hover {
+        background-color: var(--mt-status-error-bg);
+        color: var(--mt-status-error-text);
+      }
+      .button.is-warning {
+        background-color: var(--mt-surface);
+        color: var(--mt-status-paused-text);
+        border: 1px solid var(--mt-status-paused-border);
+      }
+      .button.is-warning:hover {
+        background-color: var(--mt-status-paused-bg);
+        color: var(--mt-status-paused-text);
+      }
+
+      /* ─── Search input (Tasks index toolbar) ────────────────────────────
+       * Thinner border, taller hit area, refined focus ring. */
+      .task-toolbar .input {
+        border: 1px solid var(--mt-border);
+        border-radius: var(--mt-radius-md);
+        height: 36px;
+        font-size: 0.875rem;
+      }
+
+      /* ─── Tasks table polish ────────────────────────────────────────────
+       * Thinner separator, softer hover, dark monospace task names. */
+      .task-table td {
+        border-bottom: 1px solid var(--mt-hairline);
+      }
+      .task-table .task-row-name a {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        color: var(--mt-text);
+        font-size: 0.875rem;
+      }
+      .task-table .task-row-name a:hover {
+        color: var(--mt-text);
+      }
+      .task-table tbody:not(.task-section-divider) > .task-row:hover {
+        background-color: var(--mt-surface-subtle);
+      }
+      /* Keyboard-focused row (set by j/k navigation). Subtle accent so it
+       * stands out from hover without being aggressive. */
+      .task-row.is-keyboard-focused {
+        background-color: var(--mt-surface-subtle);
+        box-shadow: inset 2px 0 0 var(--mt-link);
+      }
+
+      /* ─── Empty state (no tasks defined yet) ────────────────────────────
+       * Centered card pattern: icon + heading + subtitle + copyable command + docs link. */
+      .task-empty {
+        max-width: 28rem;
+        margin: 2.5rem auto;
+        padding: 2rem 1.5rem 2.25rem;
+        text-align: center;
+        border: 1px solid var(--mt-hairline);
+        border-radius: var(--mt-radius-lg);
+        background: var(--mt-surface);
+      }
+      .task-empty-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: var(--mt-radius-md);
+        background: var(--mt-surface-subtle);
+        color: var(--mt-text-muted);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+      }
+      .task-empty-icon svg { width: 22px; height: 22px; }
+      .task-empty-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--mt-text);
+        margin: 0 0 0.35rem;
+      }
+      .task-empty-sub {
+        font-size: 0.85rem;
+        color: var(--mt-text-muted);
+        line-height: 1.5;
+        margin: 0 auto 1.1rem;
+        max-width: 22rem;
+      }
+      .task-empty-cmd {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--mt-surface-subtle);
+        border: 1px solid var(--mt-hairline);
+        border-radius: var(--mt-radius-md);
+        padding: 0.45rem 0.7rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.78rem;
+        color: var(--mt-text);
+      }
+      /* Override Bulma's red `code` element styling inside the empty card. */
+      .task-empty-cmd code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+        font-size: inherit;
+      }
+      .task-empty-copy {
+        background: transparent;
+        border: 0;
+        color: var(--mt-text-muted);
+        cursor: pointer;
+        padding: 0 2px;
+        font-size: 0.95rem;
+        line-height: 1;
+        transition: color 100ms ease-out;
+      }
+      .task-empty-copy:hover { color: var(--mt-text); }
+      .task-empty-copy.is-copied { color: var(--mt-status-success-text); }
+      .task-empty-copy.is-copied::after {
+        content: " Copied";
+        font-size: 0.7rem;
+        margin-left: 0.25rem;
+      }
+      .task-empty-doc {
+        display: inline-block;
+        margin-top: 1rem;
+        font-size: 0.78rem;
+        color: var(--mt-link);
+        text-decoration: none;
+      }
+      .task-empty-doc:hover { text-decoration: underline; }
+
+      /* ─── Task show-page polish ─────────────────────────────────────────
+       * Section eyebrows (Active runs / New run / Previous runs), the run-form
+       * card, the source-code disclosure, and the active-run accent border.
+       * Section spacing replaces the prior mix of mb-6/mt-5/mt-6 utilities. */
+      .task-section { margin: 0 0 2rem; }
+      .task-section:last-child { margin-bottom: 0; }
+      .task-section-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--mt-text-muted);
+        margin: 0 0 0.85rem;
+      }
+
+      /* Page header — slim title + one-line metadata strip. The class name
+       * sits in monospace to acknowledge it IS an identifier; the metadata
+       * line carries the actually-useful "what's happening with this task". */
+      .task-header { margin: 0 0 1.75rem; }
+      .task-header-title {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--mt-text);
+        margin: 0 0 0.55rem;
+        word-break: break-word;
+      }
+      .task-header-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.82rem;
+        color: var(--mt-text-muted);
+      }
+      .task-header-meta .tag { margin-left: 0 !important; }
+      .task-header-meta-text { line-height: 1.4; }
+      .task-header-tags { display: inline-flex; gap: 4px; }
+      .task-header-tag {
+        display: inline-block;
+        padding: 1px 7px;
+        font-size: 0.7rem;
+        background: var(--mt-surface-subtle);
+        color: var(--mt-text-muted);
+        border-radius: var(--mt-radius-sm);
+      }
+
+      .task-run-card {
+        background: var(--mt-surface);
+        border: 1px solid var(--mt-hairline);
+        border-radius: var(--mt-radius-lg);
+        padding: 1.25rem 1.4rem;
+      }
+      .task-run-card .label { font-size: 0.85rem; }
+      .task-run-card-actions {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.5rem;
+      }
+      .task-run-inline .task-run-card-actions { margin-top: 0; }
+
+      /* Status-aware left accent on every full-fat run card. Applied
+       * everywhere (not just active runs) so an errored run in the previous-
+       * runs list also visually pops — the critique noted that failures
+       * should stand out regardless of section. */
+      .run[data-status="running"] details.box,
+      .run[data-status="enqueued"] details.box,
+      .run[data-status="interrupted"] details.box {
+        border-left: 3px solid var(--mt-status-running-dot);
+      }
+      .run[data-status="paused"] details.box,
+      .run[data-status="pausing"] details.box {
+        border-left: 3px solid var(--mt-status-paused-dot);
+      }
+      .run[data-status="errored"] details.box {
+        border-left: 3px solid var(--mt-status-error-dot);
+      }
+      .run[data-status="cancelling"] details.box {
+        border-left: 3px solid var(--mt-status-cancel-dot);
+      }
+
+      /* Error info card (rendered from runs/info/_errored.html.erb). Replaces
+       * Bulma's stock .card chrome with a tokenized surface that matches the
+       * rest of the design system. */
+      .run .card {
+        background: var(--mt-status-error-bg);
+        border: 1px solid var(--mt-status-error-border);
+        border-radius: var(--mt-radius-md);
+        box-shadow: none;
+        margin-top: 0.5rem;
+      }
+      .run .card .card-header {
+        background: transparent;
+        box-shadow: none;
+        padding: 0.7rem 0.85rem 0.2rem;
+      }
+      .run .card .card-header-title {
+        color: var(--mt-status-error-text);
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      .run .card .card-content {
+        padding: 0.4rem 0.85rem 0.9rem;
+      }
+      .run .card .content p {
+        color: var(--mt-status-error-text);
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+      }
+      .run .card .content code {
+        display: block;
+        background: var(--mt-surface);
+        color: var(--mt-status-error-text);
+        padding: 0.5rem 0.7rem;
+        border-radius: var(--mt-radius-sm);
+        font-size: 0.78rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        border: 1px solid var(--mt-status-error-border);
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      /* Bulma's <progress> uses --bulma-* tokens for the inactive track. On
+       * dark mode the default is too prominent — soften it so the eye focuses
+       * on the filled portion. */
+      .run progress.progress {
+        background-color: var(--mt-hairline);
+      }
+
+      /* Compressed previous-run row. Single line; status is a colored dot, not
+       * a labeled pill. Succeeded/cancelled history collapses to this so a long
+       * run-history doesn't read as a wall of green pills. Click the row to
+       * expand <details> and reveal the same content the full _run card shows. */
+      .run-compact { position: relative; }
+      .run-compact + .run-compact { margin-top: 2px; }
+      .run-compact > details { border-radius: var(--mt-radius-md); }
+      .run-compact > details[open] {
+        background: var(--mt-surface);
+        border: 1px solid var(--mt-hairline);
+      }
+      .run-summary {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.55rem 0.85rem;
+        border-radius: var(--mt-radius-md);
+        font-size: 0.85rem;
+        color: var(--mt-text);
+        cursor: pointer;
+        list-style: none;
+        border: 1px solid transparent;
+        transition: background-color 100ms ease-out, border-color 100ms ease-out;
+      }
+      .run-summary::-webkit-details-marker { display: none; }
+      .run-summary::before { content: none; }
+      .run-compact > details:not([open]) .run-summary:hover {
+        background: var(--mt-surface-subtle);
+        border-color: var(--mt-hairline);
+      }
+      .run-compact > details[open] .run-summary {
+        border-bottom: 1px solid var(--mt-hairline);
+        border-radius: var(--mt-radius-md) var(--mt-radius-md) 0 0;
+      }
+      .run-summary-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--mt-status-cancel-dot);
+        flex: 0 0 6px;
+      }
+      .run-compact[data-status="succeeded"] .run-summary-dot { background: var(--mt-status-success-dot); }
+      .run-compact[data-status="cancelled"] .run-summary-dot { background: var(--mt-status-cancel-dot); }
+      .run-summary-time { color: var(--mt-text); }
+      .run-summary-duration {
+        color: var(--mt-text-muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .run-summary-status {
+        color: var(--mt-text-muted);
+        font-size: 0.78rem;
+      }
+      .run-summary-id {
+        margin-left: auto;
+        color: var(--mt-text-muted);
+        font-size: 0.78rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      .run-summary-body { padding: 0.6rem 0.85rem 0.85rem; }
+
+      /* Run-card permalink (#10) — was using link blue and felt clickable in
+       * a navigational way. It's a row identifier, not navigation; quiet it. */
+      .run-permalink {
+        color: var(--mt-text-muted) !important;
+        font-weight: 400;
+        text-decoration: none;
+      }
+      .run-permalink:hover { color: var(--mt-text) !important; }
+
+      /* Resume should out-rank Cancel visually since it's the action 90% of
+       * the time on a paused run. Make Cancel a quieter text-button (no
+       * border) so the eye lands on Resume first. */
+      .run .buttons form:has(.button[value="Cancel"]) .button.is-danger {
+        background: transparent;
+        border-color: transparent;
+        padding: 6px 10px;
+      }
+      .run .buttons form:has(.button[value="Cancel"]) .button.is-danger:hover {
+        background: var(--mt-status-error-bg);
+      }
+
+      .task-source-code {
+        border: 1px solid var(--mt-hairline);
+        border-radius: var(--mt-radius-lg);
+        background: var(--mt-surface);
+        overflow: hidden;
+      }
+      .task-source-code > summary {
+        padding: 0.9rem 1.2rem;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: var(--mt-text);
+        background: var(--mt-surface);
+        transition: background-color 100ms ease-out;
+        position: relative;
+      }
+      .task-source-code > summary:hover { background: var(--mt-surface-subtle); }
+      .task-source-code[open] > summary { border-bottom: 1px solid var(--mt-hairline); }
+      .task-source-code-title { font-weight: 600; margin-left: 0.4rem; }
+      .task-source-code pre {
+        margin: 0;
+        padding: 1rem 1.2rem;
+        background: var(--mt-surface-subtle);
+        font-size: 0.78rem;
+        line-height: 1.55;
+        overflow-x: auto;
+      }
+
+      /* ─── Keyboard shortcuts dialog ─────────────────────────────────────
+       * Native <dialog>, opened by pressing "?". Engineers expect this in
+       * a tool they use daily — discoverable without crowding the UI. */
+      .shortcuts-dialog {
+        border: 1px solid var(--mt-hairline);
+        border-radius: var(--mt-radius-lg);
+        background: var(--mt-surface);
+        color: var(--mt-text);
+        padding: 0;
+        max-width: 22rem;
+        width: calc(100% - 2rem);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+      }
+      .shortcuts-dialog::backdrop {
+        background: color-mix(in srgb, #000 35%, transparent);
+        backdrop-filter: blur(2px);
+      }
+      .shortcuts-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.8rem 1rem;
+        border-bottom: 1px solid var(--mt-hairline);
+      }
+      .shortcuts-header h2 {
+        margin: 0;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--mt-text-muted);
+      }
+      .shortcuts-close {
+        background: transparent;
+        border: 0;
+        color: var(--mt-text-muted);
+        cursor: pointer;
+        font-size: 0.95rem;
+        padding: 0.2rem 0.4rem;
+        border-radius: var(--mt-radius-sm);
+        line-height: 1;
+      }
+      .shortcuts-close:hover {
+        background: var(--mt-surface-subtle);
+        color: var(--mt-text);
+      }
+      .shortcuts-list {
+        list-style: none;
+        margin: 0;
+        padding: 0.6rem 1rem 1rem;
+      }
+      .shortcuts-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 0.4rem 0;
+        font-size: 0.85rem;
+        color: var(--mt-text);
+      }
+      .shortcuts-list kbd {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.7rem;
+        height: 1.4rem;
+        padding: 0 0.4rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.75rem;
+        color: var(--mt-text);
+        background: var(--mt-surface-subtle);
+        border: 1px solid var(--mt-hairline);
+        border-bottom-width: 2px;
+        border-radius: var(--mt-radius-sm);
+      }
+
+      /* ─── Filter count badge ────────────────────────────────────────────
+       * Floats absolutely to the LEFT of the search wrap so the search input
+       * width never changes when the badge appears. Hidden via display:none
+       * when no filter is active. */
+      .task-filter-count {
+        display: none;
+        align-items: center;
+        position: absolute;
+        right: calc(100% + 0.5rem);
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 2px 9px;
+        border-radius: var(--mt-radius-pill);
+        background: var(--mt-surface-subtle);
+        border: 1px solid var(--mt-hairline);
+        color: var(--mt-text-muted);
+        font-size: 0.72rem;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 140ms ease-out;
+        pointer-events: none;
+      }
+      .task-filter-count.is-visible {
+        display: inline-flex;
+        opacity: 1;
+      }
+
+      /* ─── Unified focus ring ────────────────────────────────────────────
+       * Bulma's stock focus shadow is chunky and varies per component. Source
+       * order beats Bulma at equal specificity (Bulma loads via <link>, this
+       * inline <style> loads after). :focus-visible scopes to keyboard. */
+      .button:focus-visible,
+      .input:focus-visible,
+      .task-search:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible,
+      summary:focus-visible,
+      a:focus-visible,
+      .tag-filter:focus-visible,
+      .task-empty-copy:focus-visible {
+        outline: none;
+        box-shadow: var(--mt-focus-ring);
+        border-color: var(--mt-link);
       }
     </style>
 
@@ -447,10 +1314,17 @@
       } catch (e) { /* localStorage may be disabled */ }
 
       (function () {
-        const POLL_INTERVAL = 3000
+        const POLL_INTERVAL = 10000
         const MAX_FAILURES = 5
+        // Minimum time the spinner stays in the refreshing state once shown.
+        // Sub-second polls would otherwise toggle the spin animation in and
+        // out within ~50ms, which reads as a flicker. 600ms is short enough
+        // not to feel sluggish but long enough to look intentional.
+        const INDICATOR_MIN_MS = 600
         let failures = 0
         let timer = null
+        let indicatorShownAt = 0
+        let indicatorHideTimer = null
 
         function toggleTheme() {
           const html = document.documentElement
@@ -527,13 +1401,92 @@
             e.preventDefault()
             toggleTheme()
           }
+          // "?" opens the keyboard shortcuts dialog.
+          if (e.key === "?" && !typing) {
+            e.preventDefault()
+            const dialog = document.getElementById("shortcuts-dialog")
+            if (dialog && typeof dialog.showModal === "function" && !dialog.open) {
+              dialog.showModal()
+            }
+            return
+          }
+          // "j"/"k" navigate the visible task rows on the index page.
+          // Sets .is-keyboard-focused on the row so the user sees what's
+          // selected; Enter opens it.
+          if ((e.key === "j" || e.key === "k") && !typing) {
+            const rows = Array.from(document.querySelectorAll("tr.task-row")).filter((r) => !r.hidden)
+            if (rows.length === 0) return
+            e.preventDefault()
+            let idx = rows.findIndex((r) => r.classList.contains("is-keyboard-focused"))
+            if (idx === -1) {
+              idx = e.key === "j" ? 0 : rows.length - 1
+            } else {
+              rows[idx].classList.remove("is-keyboard-focused")
+              idx = e.key === "j"
+                ? Math.min(rows.length - 1, idx + 1)
+                : Math.max(0, idx - 1)
+            }
+            const row = rows[idx]
+            row.classList.add("is-keyboard-focused")
+            row.scrollIntoView({ block: "nearest", behavior: "smooth" })
+            return
+          }
+          // Enter opens the keyboard-focused row.
+          if (e.key === "Enter" && !typing) {
+            const focused = document.querySelector("tr.task-row.is-keyboard-focused")
+            const link = focused?.querySelector(".task-row-name a")
+            if (link) {
+              e.preventDefault()
+              link.click()
+            }
+            return
+          }
+          // "g h" — go home (tasks index). GitHub/Linear convention.
+          if (e.key === "g" && !typing) {
+            window.__gPressedAt = Date.now()
+            return
+          }
+          if (e.key === "h" && !typing && window.__gPressedAt && Date.now() - window.__gPressedAt < 1200) {
+            e.preventDefault()
+            window.__gPressedAt = 0
+            window.location.href = "<%= root_path %>"
+            return
+          }
+        })
+
+        // Close the shortcuts dialog: button, backdrop click, Escape (native).
+        document.addEventListener("click", (e) => {
+          if (e.target.closest("[data-close-shortcuts]")) {
+            document.getElementById("shortcuts-dialog")?.close()
+            return
+          }
+          const dialog = document.getElementById("shortcuts-dialog")
+          if (dialog?.open && e.target === dialog) {
+            dialog.close()
+          }
         })
 
         function setIndicator(visible) {
           const el = document.getElementById("refresh-indicator")
           if (!el) return
-          el.hidden = !visible
-          el.setAttribute("aria-label", visible ? "Refreshing" : "Auto-refresh idle")
+          if (visible) {
+            clearTimeout(indicatorHideTimer)
+            indicatorHideTimer = null
+            indicatorShownAt = Date.now()
+            el.classList.add("is-refreshing")
+            el.setAttribute("aria-label", "Refreshing")
+            return
+          }
+          // Hide path — enforce a minimum visible duration so fast polls
+          // don't toggle the spin animation in and out within tens of ms.
+          const elapsed = Date.now() - indicatorShownAt
+          const remaining = Math.max(0, INDICATOR_MIN_MS - elapsed)
+          clearTimeout(indicatorHideTimer)
+          indicatorHideTimer = setTimeout(() => {
+            el.classList.remove("is-refreshing")
+            el.setAttribute("aria-label", "Auto-refresh idle")
+            indicatorHideTimer = null
+          }, remaining)
         }
 
         function applyFilter() {
@@ -556,6 +1509,14 @@
           })
           const empty = document.querySelector(".task-empty-results")
           if (empty) empty.hidden = visible !== 0 || rows.length === 0
+
+          // Filter count badge: visible when search/chips are narrowing.
+          const countBadge = document.querySelector(".task-filter-count")
+          if (countBadge && rows.length > 0) {
+            const filtering = !!search || activeTags.size > 0
+            countBadge.textContent = filtering ? visible + " of " + rows.length : ""
+            countBadge.classList.toggle("is-visible", filtering)
+          }
         }
 
         document.addEventListener("input", (e) => {
@@ -572,6 +1533,18 @@
           }
           if (e.target.closest("#theme-toggle")) {
             toggleTheme()
+            return
+          }
+          // Generic copy-button: any element with [data-copy] writes its
+          // attribute value to the clipboard. The "is-copied" affordance is
+          // gated behind a successful write so insecure-context failures are
+          // silent rather than misleading.
+          const copyBtn = e.target.closest("[data-copy]")
+          if (copyBtn && navigator.clipboard) {
+            navigator.clipboard.writeText(copyBtn.dataset.copy).then(() => {
+              copyBtn.classList.add("is-copied")
+              setTimeout(() => copyBtn.classList.remove("is-copied"), 1200)
+            })
           }
         })
 
@@ -690,14 +1663,29 @@
                 location.reload()
                 return
               }
-              scheduleNext(POLL_INTERVAL * Math.pow(2, failures - 1))
+              scheduleNext(effectiveInterval() * Math.pow(2, failures - 1))
             })
+        }
+
+        // Read the polling interval from any [data-refresh] target's
+        // data-refresh-interval attribute. Pages that need a tighter poll
+        // (e.g. the task show page with active runs) set 3000; the default
+        // is the POLL_INTERVAL constant. The shortest declared interval wins
+        // when multiple targets are present.
+        function effectiveInterval() {
+          const targets = document.querySelectorAll("[data-refresh][data-refresh-interval]")
+          let min = Infinity
+          targets.forEach((t) => {
+            const v = parseInt(t.dataset.refreshInterval, 10)
+            if (!isNaN(v) && v > 0 && v < min) min = v
+          })
+          return min === Infinity ? POLL_INTERVAL : min
         }
 
         function scheduleNext(delay) {
           clearTimeout(timer)
           if (document.hidden) return
-          timer = setTimeout(refreshOnce, delay == null ? POLL_INTERVAL : delay)
+          timer = setTimeout(refreshOnce, delay == null ? effectiveInterval() : delay)
         }
 
         document.addEventListener("visibilitychange", () => {
@@ -712,6 +1700,14 @@
           applyFilter()
           scheduleNext()
         })
+
+        // Console easter egg — the audience for this tool opens devtools.
+        try {
+          const big = "color: var(--bulma-danger-on-scheme, #e91948); font-weight: 600; font-size: 13px"
+          const small = "color: #6d7175; font-size: 11px"
+          console.log("%cMaintenance Tasks%c  ·  press ? for keyboard shortcuts", big, small)
+          console.log("%csource:  https://github.com/Shopify/maintenance_tasks", small)
+        } catch (e) { /* console may be unavailable */ }
       })()
     </script>
   </head>
@@ -732,5 +1728,21 @@
       </div>
     </main>
 
+    <%# Keyboard-shortcuts cheatsheet — opened by pressing ? %>
+    <dialog id="shortcuts-dialog" class="shortcuts-dialog" aria-label="Keyboard shortcuts">
+      <div class="shortcuts-header">
+        <h2>Keyboard shortcuts</h2>
+        <button type="button" class="shortcuts-close" data-close-shortcuts aria-label="Close">✕</button>
+      </div>
+      <ul class="shortcuts-list">
+        <li><kbd>/</kbd><span>Focus search</span></li>
+        <li><kbd>j</kbd> <kbd>k</kbd><span>Navigate task rows</span></li>
+        <li><kbd>Enter</kbd><span>Open focused task</span></li>
+        <li><kbd>g</kbd> <kbd>h</kbd><span>Go home</span></li>
+        <li><kbd>t</kbd><span>Toggle theme</span></li>
+        <li><kbd>Esc</kbd><span>Clear search · close this</span></li>
+        <li><kbd>?</kbd><span>Show this panel</span></li>
+      </ul>
+    </dialog>
   </body>
 </html>

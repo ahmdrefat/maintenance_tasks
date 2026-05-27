@@ -92,6 +92,17 @@ module MaintenanceTasks
       true
     end
 
+    # @return [Array<Symbol>] the tags declared on the Task class via the
+    #   `tag` macro. Empty array when the Task class has been deleted so the
+    #   deleted-task render path stays safe.
+    def tags
+      return @tags if defined?(@tags)
+
+      @tags = Task.named(name).tags
+    rescue Task::NotFoundError
+      @tags = [].freeze
+    end
+
     # @return [Boolean] whether the Task inherits from CsvTask.
     def csv_task?
       !deleted? && Task.named(name).has_csv_content?
