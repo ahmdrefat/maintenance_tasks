@@ -1180,6 +1180,31 @@
         overflow-x: auto;
       }
 
+      /* Navbar `?` button — visible affordance that hints at the keyboard
+       * shortcut. Styled like a kbd key so the shortcut is self-documenting. */
+      .shortcuts-hint {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.65rem;
+        height: 1.4rem;
+        padding: 0;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--mt-text-muted);
+        background: var(--mt-surface-subtle);
+        border: 1px solid var(--mt-hairline);
+        border-bottom-width: 2px;
+        border-radius: var(--mt-radius-sm);
+        cursor: pointer;
+        transition: color 100ms ease-out, border-color 100ms ease-out;
+      }
+      .shortcuts-hint:hover {
+        color: var(--mt-text);
+        border-color: var(--mt-border);
+      }
+
       /* ─── Keyboard shortcuts dialog ─────────────────────────────────────
        * Native <dialog>, opened by pressing "?". Engineers expect this in
        * a tool they use daily — discoverable without crowding the UI. */
@@ -1454,8 +1479,16 @@
           }
         })
 
-        // Close the shortcuts dialog: button, backdrop click, Escape (native).
+        // Open/close the shortcuts dialog: navbar `?` button opens it; the
+        // close button, backdrop click, or Escape (native) close it.
         document.addEventListener("click", (e) => {
+          if (e.target.closest("#shortcuts-open")) {
+            const dialog = document.getElementById("shortcuts-dialog")
+            if (dialog && typeof dialog.showModal === "function" && !dialog.open) {
+              dialog.showModal()
+            }
+            return
+          }
           if (e.target.closest("[data-close-shortcuts]")) {
             document.getElementById("shortcuts-dialog")?.close()
             return
