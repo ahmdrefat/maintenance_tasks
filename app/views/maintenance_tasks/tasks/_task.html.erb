@@ -27,9 +27,7 @@
         </span>
       <% end %>
     <% else %>
-      <% unless local_assigns[:hide_never_run_label] %>
-        <span class="has-text-grey-light is-size-7">Never run</span>
-      <% end %>
+      <%= status_tag("new") %>
     <% end %>
   </td>
 </tr>

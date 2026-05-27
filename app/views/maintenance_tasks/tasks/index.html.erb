@@ -1,28 +1,46 @@
-<h1 class="title is-3 has-text-weight-bold">Tasks</h1>
-
 <% if @tasks.empty? %>
-  <div class="content">
-    <p class="is-size-5">No maintenance tasks have been defined yet.</p>
-    <p>
-      Generate your first task with:
-    </p>
-    <pre><code>bin/rails generate maintenance_tasks:task my_task</code></pre>
+  <div class="task-empty" role="region" aria-labelledby="task-empty-title">
+    <div class="task-empty-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+        <path d="M3 9h18"></path>
+        <path d="M8 14h6"></path>
+        <path d="M8 17h4"></path>
+      </svg>
+    </div>
+    <h2 id="task-empty-title" class="task-empty-title">No maintenance tasks yet</h2>
+    <p class="task-empty-sub">Generate your first task to start running scheduled jobs from this dashboard.</p>
+    <div class="task-empty-cmd">
+      <code>bin/rails g maintenance_tasks:task my_task</code>
+      <button type="button"
+              class="task-empty-copy"
+              data-copy="bin/rails g maintenance_tasks:task my_task"
+              aria-label="Copy command to clipboard">⎘</button>
+    </div>
+    <a class="task-empty-doc"
+       href="https://github.com/Shopify/maintenance_tasks#usage"
+       target="_blank"
+       rel="noopener noreferrer">Read the docs →</a>
   </div>
 <% else %>
-  <div class="task-toolbar mb-4">
-    <div class="control has-icons-left">
-      <input type="search"
-             id="task-search"
-             class="input"
-             placeholder="Search tasks…"
-             aria-label="Search tasks by name"
-             autocomplete="off"
-             autocapitalize="off"
-             spellcheck="false">
-      <span class="icon is-left" aria-hidden="true">⌕</span>
+  <% content_for :navbar_search do %>
+    <div class="task-search-wrap">
+      <span class="task-filter-count" role="status" aria-live="polite"></span>
+      <div class="task-search-field">
+        <input type="search"
+               id="task-search"
+               class="task-search"
+               placeholder="Search tasks…"
+               aria-label="Search tasks by name"
+               autocomplete="off"
+               autocapitalize="off"
+               spellcheck="false">
+      </div>
     </div>
+  <% end %>
 
-    <% if @tag_filters.any? %>
+  <% if @tag_filters.any? %>
+    <div class="task-toolbar mb-4">
       <div class="tag-filters" role="group" aria-label="Filter tasks by tag">
         <% @tag_filters.each do |tag_name| %>
           <button type="button"
@@ -33,14 +51,18 @@
           </button>
         <% end %>
       </div>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 
   <p class="task-empty-results has-text-grey is-italic mb-4" hidden role="status">
     No tasks match the current filters.
   </p>
 
+  <%# Never-run tasks lead so a freshly-defined task is immediately discoverable; %>
+  <%# tasks with prior runs follow, sorted by their existing recency order. Each %>
+  <%# never-run task gets a "New" status pill rendered by _task.html.erb. %>
   <% with_runs, never_run = @tasks.partition(&:related_run) %>
+  <% ordered_tasks = never_run + with_runs %>
 
   <%= tag.div(data: { refresh: (defined?(@refresh) && @refresh) || "" }) do %>
     <div class="table-container">
@@ -52,23 +74,9 @@
             <th scope="col" class="task-col-last-run">Last run</th>
           </tr>
         </thead>
-        <% if with_runs.any? %>
-          <tbody>
-            <%= render partial: "task", collection: with_runs %>
-          </tbody>
-        <% end %>
-        <% if never_run.any? %>
-          <% if with_runs.any? %>
-            <tbody class="task-section-divider" aria-hidden="true">
-              <tr>
-                <td colspan="3"><span>Never run</span></td>
-              </tr>
-            </tbody>
-          <% end %>
-          <tbody>
-            <%= render partial: "task", collection: never_run, locals: { hide_never_run_label: with_runs.any? } %>
-          </tbody>
-        <% end %>
+        <tbody>
+          <%= render partial: "task", collection: ordered_tasks %>
+        </tbody>
       </table>
     </div>
   <% end %>

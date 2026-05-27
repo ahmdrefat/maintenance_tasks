@@ -1,0 +1,24 @@
+<%# Compact previous-run row that expands to reveal the full run details. %>
+<%# The <summary> is a single line (dot · time · duration · status · #id) %>
+<%# and the body is the shared _run_body partial — same content the full %>
+<%# _run.html.erb shows, but starts collapsed. %>
+<div class="run run-compact" data-status="<%= run.status %>">
+  <details id="run_<%= run.id %>">
+    <summary class="run-summary">
+      <span class="run-summary-dot" aria-hidden="true"></span>
+      <span class="run-summary-time">
+        <%= time_ago(run.created_at) %>
+      </span>
+      <% if run.started_at && run.ended_at %>
+        <span class="run-summary-duration">
+          <%= distance_of_time_in_words(run.started_at, run.ended_at, include_seconds: true) %>
+        </span>
+      <% end %>
+      <span class="run-summary-status"><%= run.status.capitalize %></span>
+      <span class="run-summary-id">#<%= run.id %></span>
+    </summary>
+    <div class="run-summary-body">
+      <%= render "maintenance_tasks/runs/run_body", run: run %>
+    </div>
+  </details>
+</div>
