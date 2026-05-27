@@ -1180,30 +1180,28 @@
         overflow-x: auto;
       }
 
-      /* Navbar `?` button — visible affordance that hints at the keyboard
-       * shortcut. Styled like a kbd key so the shortcut is self-documenting. */
+      /* Navbar `?` button — quiet text affordance matching the visual weight
+       * of the refresh indicator and theme toggle. No box; just a glyph that
+       * brightens on hover. */
       .shortcuts-hint {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 1.65rem;
-        height: 1.4rem;
+        width: 1.1rem;
+        height: 1.1rem;
         padding: 0;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        font-size: 0.78rem;
-        font-weight: 600;
+        font: inherit;
+        font-size: 0.95rem;
+        font-weight: 400;
+        line-height: 1;
         color: var(--mt-text-muted);
-        background: var(--mt-surface-subtle);
-        border: 1px solid var(--mt-hairline);
-        border-bottom-width: 2px;
-        border-radius: var(--mt-radius-sm);
+        background: transparent;
+        border: 0;
+        opacity: 0.6;
         cursor: pointer;
-        transition: color 100ms ease-out, border-color 100ms ease-out;
+        transition: opacity 100ms ease-out, color 100ms ease-out;
       }
-      .shortcuts-hint:hover {
-        color: var(--mt-text);
-        border-color: var(--mt-border);
-      }
+      .shortcuts-hint:hover { opacity: 1; color: var(--mt-text); }
 
       /* ─── Keyboard shortcuts dialog ─────────────────────────────────────
        * Native <dialog>, opened by pressing "?". Engineers expect this in
